@@ -1,0 +1,5 @@
+#route for LB healthchecks
+GET     /healthcheck                controllers.HealthCheckController.healthcheck
+
+#establishes a websocket for joining and playing a game meow!
+GET     /connect                    controllers.TicToeController.connect
