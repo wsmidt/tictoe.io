@@ -11,6 +11,8 @@ case object Ping extends InMessage
 
 sealed trait OutMessage extends WSMessage
 case object Pong extends OutMessage
+case object AwaitingOpponent extends OutMessage
+case object OpponentFound extends OutMessage
 case class ErrorMessage(msg: String, status: Int) extends OutMessage
 
 object ErrorMessage {
@@ -43,6 +45,12 @@ object WSMessage {
       "ErrorMessage" -> Json.writes[ErrorMessage],
       "Pong" -> new Writes[Pong.type] {
         override def writes(o: Pong.type): JsValue = JsNull
+      },
+      "AwaitingOpponent" -> new Writes[AwaitingOpponent.type] {
+        override def writes(o: AwaitingOpponent.type): JsValue = JsNull
+      },
+      "OpponentFound" -> new Writes[OpponentFound.type] {
+        override def writes(o: OpponentFound.type): JsValue = JsNull
       }
     )
   }
