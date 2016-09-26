@@ -2,16 +2,17 @@ package services
 
 import javax.inject._
 
-import akka.actor.{Actor, ActorRef}
-import akka.actor.Actor.Receive
-import com.typesafe.scalalogging.LazyLogging
+import akka.actor.ActorRef
 import services.GameManager.Messages.ConnectionReceived
 
 @Singleton
-class GameManager extends Actor with LazyLogging {
-  logger.debug("manager started")
+class GameManager extends AppActor[GameManager.State] {
 
-  override def receive: Receive = receive(GameManager.State())
+  override val initialState: GameManager.State = GameManager.State(
+    awaitingConnectionActor = None
+  )
+
+  logger.debug("manager started")
 
   def receive(state: GameManager.State): Receive = {
     case ConnectionReceived(connectionActor) => state.awaitingConnectionActor match {
@@ -23,12 +24,12 @@ class GameManager extends Actor with LazyLogging {
         context.actorOf(GameActor.props(awaitingConnectionActor, connectionActor))
 
         val updatedState = state.copy(awaitingConnectionActor = None)
-        context.become(receive(updatedState))
+        updateState(updatedState)
       case None =>
         connectionActor ! AwaitingOpponent
 
         val updatedState = state.copy(awaitingConnectionActor = Some(connectionActor))
-        context.become(receive(updatedState))
+        updateState(updatedState)
     }
     case other =>
       logger.error(s"Received unhandled message: $other")
@@ -36,7 +37,7 @@ class GameManager extends Actor with LazyLogging {
 }
 
 object GameManager {
-  case class State(awaitingConnectionActor: Option[ActorRef] = None)
+  case class State(awaitingConnectionActor: Option[ActorRef])
 
   object Messages {
     case class ConnectionReceived(connectionActor: ActorRef)
