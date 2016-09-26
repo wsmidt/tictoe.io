@@ -1,6 +1,7 @@
 package json
 
 import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 import scala.reflect._
 
@@ -8,7 +9,19 @@ object JsonMapping {
   case class TypedJson(typ: String, data: JsValue)
 
   object TypedJson {
-    implicit val jsonFormat = Json.format[TypedJson]
+    implicit val jsonFormat: Format[TypedJson] = (
+      (JsPath \ "type").format[String] and
+      //if we are missing the "data" field return JsNull, and if we
+      // are writing out JsNull remove the data field. This is so we
+      // dont require "data" : null and it instead can be left empty
+      (JsPath \ "data").formatNullable[JsValue].inmap[JsValue]({
+        case Some(jsValue) => jsValue
+        case None => JsNull
+      }, {
+        case JsNull => None
+        case jsValue => Some(jsValue)
+      })
+    )(TypedJson.apply, unlift(TypedJson.unapply))
   }
 
   implicit class WritesMapping[T](typeAndWrites: (String, Writes[T]))(implicit val classTag: ClassTag[T]) {
