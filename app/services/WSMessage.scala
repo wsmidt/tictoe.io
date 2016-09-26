@@ -2,6 +2,7 @@ package services
 
 import com.typesafe.scalalogging.LazyLogging
 import json.JsonMapping._
+import json.ObjectFormat
 import play.api.libs.json._
 sealed trait WSMessage
 
@@ -32,9 +33,7 @@ object WSMessage {
     implicit val inMessageReads: Reads[InMessage] = new Reads[InMessage] with LazyLogging {
       val typedInMessageReads = TypedReads[InMessage](
         "JsonReadsError" -> Json.reads[JsonReadsError],
-        "Ping" -> new Reads[Ping.type] {
-          override def reads(json: JsValue): JsResult[Ping.type] = JsSuccess(Ping)
-        }
+        "Ping" -> ObjectFormat(Ping)
       )
       override def reads(json: JsValue): JsResult[InMessage] = typedInMessageReads.reads(json) recover {
         case e: JsError =>
@@ -45,15 +44,9 @@ object WSMessage {
 
     implicit val outMessageWrites: Writes[OutMessage] = TypedWrites[OutMessage](
       "ErrorMessage" -> Json.writes[ErrorMessage],
-      "Pong" -> new Writes[Pong.type] {
-        override def writes(o: Pong.type): JsValue = JsNull
-      },
-      "AwaitingOpponent" -> new Writes[AwaitingOpponent.type] {
-        override def writes(o: AwaitingOpponent.type): JsValue = JsNull
-      },
-      "OpponentFound" -> new Writes[OpponentFound.type] {
-        override def writes(o: OpponentFound.type): JsValue = JsNull
-      },
+      "Pong" -> ObjectFormat(Pong),
+      "AwaitingOpponent" -> ObjectFormat(AwaitingOpponent),
+      "OpponentFound" -> ObjectFormat(OpponentFound),
       "GameStarted" -> Json.writes[GameStarted]
     )
   }
