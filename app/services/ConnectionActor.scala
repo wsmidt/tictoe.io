@@ -12,10 +12,14 @@ class ConnectionActor(out: ActorRef, gameManager: ActorRef) extends Actor with L
 
   def receive(state: ConnectionActor.State): Receive = {
     case Ping => out ! Pong
+    case start: GameStarted =>
+      out ! start
+      val updatedState = state.copy(gameActor = Some(sender))
+      context.become(receive(updatedState))
     case outMsg: OutMessage => out ! outMsg
     case inMsg: InMessage => state.gameActor match {
       case Some(gameActor) => gameActor ! inMsg
-      case None => //TODO some error back to user
+      case None => out ! ErrorMessage("GameNotFound", ErrorMessage.Status.NotFound)
     }
     case other =>
       logger.error(s"received unhandled message: $other")

@@ -13,6 +13,7 @@ sealed trait OutMessage extends WSMessage
 case object Pong extends OutMessage
 case object AwaitingOpponent extends OutMessage
 case object OpponentFound extends OutMessage
+case class GameStarted(turn: Boolean) extends OutMessage
 case class ErrorMessage(msg: String, status: Int) extends OutMessage
 
 object ErrorMessage {
@@ -20,6 +21,7 @@ object ErrorMessage {
   object Status {
     val BadRequest: ErrorStatus = 400
     val ServerError: ErrorStatus = 500
+    val NotFound: ErrorStatus = 404
   }
 }
 
@@ -51,7 +53,8 @@ object WSMessage {
       },
       "OpponentFound" -> new Writes[OpponentFound.type] {
         override def writes(o: OpponentFound.type): JsValue = JsNull
-      }
+      },
+      "GameStarted" -> Json.writes[GameStarted]
     )
   }
 }

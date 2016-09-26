@@ -19,7 +19,8 @@ class GameManager extends Actor with LazyLogging {
         connectionActor ! OpponentFound
         awaitingConnectionActor ! OpponentFound
 
-        //TODO create GameActor and send the game actor to the connections!
+        //TODO Props needs a unique actor name. perhaps we should inject the GameActor?
+        context.actorOf(GameActor.props(awaitingConnectionActor, connectionActor))
 
         val updatedState = state.copy(awaitingConnectionActor = None)
         context.become(receive(updatedState))
