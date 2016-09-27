@@ -1,6 +1,16 @@
 TicToe.io
 =========
 
-Aaa... Meow meowem woemw omewomew omweo mwo emowe mowm eow emow
+Installation Instructions:
+1. Download and install brew
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-Yep... kittens!!!!
+2. Download Scala Build Tools:
+brew install sbt
+
+3. Clone the project to the folder tictoe:
+git clone https://github.com/wsmidt/tictoe.io.git tictoe
+
+4. Build the project
+<INSERT_COMMAND_HERE>
+
