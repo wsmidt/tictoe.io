@@ -2,7 +2,10 @@ name := """tictoe.io"""
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file("."))
+  .enablePlugins(PlayScala)
+  .enablePlugins(BuildInfoPlugin)
+  .enablePlugins(GitVersioning)
 
 scalaVersion := "2.11.7"
 
@@ -15,3 +18,13 @@ libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 )
 
+//BuildInfoPlugin settings
+buildInfoKeys := Seq[BuildInfoKey](
+  name,
+  version,
+  "gitBranch" -> git.gitCurrentBranch.value,
+  "gitSha" -> git.gitHeadCommit.value.get,
+  "buildDate" -> System.currentTimeMillis
+)
+buildInfoPackage := "buildInfo"
+buildInfoOptions += BuildInfoOption.ToJson

@@ -15,6 +15,7 @@ case object Pong extends OutMessage
 case object AwaitingOpponent extends OutMessage
 case object OpponentFound extends OutMessage
 case class GameStarted(turn: Boolean) extends OutMessage
+case object OpponentDisconnected extends OutMessage
 case class ErrorMessage(msg: String, status: Int) extends OutMessage
 
 object ErrorMessage {
@@ -47,7 +48,8 @@ object WSMessage {
       "Pong" -> ObjectFormat(Pong),
       "AwaitingOpponent" -> ObjectFormat(AwaitingOpponent),
       "OpponentFound" -> ObjectFormat(OpponentFound),
-      "GameStarted" -> Json.writes[GameStarted]
+      "GameStarted" -> Json.writes[GameStarted],
+      "OpponentDisconnected" -> ObjectFormat(OpponentDisconnected)
     )
   }
 }
