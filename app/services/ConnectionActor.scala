@@ -14,19 +14,25 @@ class ConnectionActor(out: ActorRef, gameManager: ActorRef) extends AppActor[Con
   gameManager ! GameManager.Messages.ConnectionReceived(self)
 
   override def receive(state: ConnectionActor.State): Receive = {
+
     case Ping => out ! Pong
+
     case start: GameStarted =>
       out ! start
       val updatedState = state.copy(gameActor = Some(sender))
       updateState(updatedState)
+
     case disconnected: OpponentDisconnected.type =>
       out ! disconnected
       context.stop(self)
+
     case outMsg: OutMessage => out ! outMsg
+
     case inMsg: InMessage => state.gameActor match {
       case Some(gameActor) => gameActor ! inMsg
       case None => out ! ErrorMessage("GameNotFound", ErrorMessage.Status.NotFound)
     }
+
     case other =>
       logger.error(s"received unhandled message: $other")
       out ! ErrorMessage("RecievedUnhandledMessage", ErrorMessage.Status.ServerError)

@@ -6,6 +6,8 @@ class GameActor(xPlayerConnection: ActorRef, oPlayerConnection: ActorRef) extend
 
   override val initialState: GameActor.State = GameActor.State()
 
+  logger.debug("game started")
+
   //watch the connection actors for when the are Terminated
   context.watch(xPlayerConnection)
   context.watch(oPlayerConnection)
@@ -15,15 +17,19 @@ class GameActor(xPlayerConnection: ActorRef, oPlayerConnection: ActorRef) extend
   oPlayerConnection ! GameStarted(false)
 
   override def receive(state: GameActor.State): Receive = {
-    case Terminated(connectionActor) if connectionActor.equals(xPlayerConnection) =>
+
+    case Terminated(connectionActor) if connectionActor == xPlayerConnection =>
       oPlayerConnection ! OpponentDisconnected
       context.stop(self)
-    case Terminated(connectionActor) if connectionActor.equals(oPlayerConnection) =>
+
+    case Terminated(connectionActor) if connectionActor == oPlayerConnection =>
       xPlayerConnection ! OpponentDisconnected
       context.stop(self)
+
     case other =>
       logger.error(s"received unhandled message: $other")
       sender ! ErrorMessage("RecievedUnhandledMessage", ErrorMessage.Status.ServerError)
+
   }
 }
 
