@@ -19,6 +19,9 @@ class ConnectionActor(out: ActorRef, gameManager: ActorRef) extends AppActor[Con
       out ! start
       val updatedState = state.copy(gameActor = Some(sender))
       updateState(updatedState)
+    case disconnected: OpponentDisconnected.type =>
+      out ! disconnected
+      context.stop(self)
     case outMsg: OutMessage => out ! outMsg
     case inMsg: InMessage => state.gameActor match {
       case Some(gameActor) => gameActor ! inMsg
