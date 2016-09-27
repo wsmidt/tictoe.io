@@ -12,5 +12,20 @@ brew install sbt
 git clone https://github.com/wsmidt/tictoe.io.git tictoe
 
 4. Build the project
-<INSERT_COMMAND_HERE>
+sbt
+compile
 
+5. Run the project
+sbt
+run
+
+6. Connect to the application
+As soon as it says:
+--- (Running the application, auto-reloading is enabled) ---
+
+[info] p.c.s.NettyServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+
+(Server started, use Ctrl+D to stop and go back to the console...)
+
+On your browser visit the url:
+localhost:9000/connect
