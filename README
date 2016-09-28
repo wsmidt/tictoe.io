@@ -1,37 +1,31 @@
 TicToe.io
 =========
 
-### Installation Instructions:
-
-1. Download and install brew: 
->`/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+Installation Instructions:
+1. Download and install brew
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 2. Download Scala Build Tools:
->`brew install sbt`
+brew install sbt
 
 3. Clone the project to the folder tictoe:
->`git clone https://github.com/wsmidt/tictoe.io.git tictoe`
+git clone https://github.com/wsmidt/tictoe.io.git tictoe
 
 4. Build the project
->`sbt`
->
->`compile`
+sbt
+compile
 
 5. Run the project
->`sbt`
->
->`run`
+sbt
+run
 
 6. Connect to the application
 As soon as it says:
->`--- (Running the application, auto-reloading is enabled) ---`
->`[info] p.c.s.NettyServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000`
->`(Server started, use Ctrl+D to stop and go back to the console...)`
+--- (Running the application, auto-reloading is enabled) ---
 
-7. Get the following [Chrome extention here][chrome-websocket]
-8. Using the Chrome websocket extension, visit:
-> ws://localhost:9000/connect
-9. Run two websockets to start the game.
+[info] p.c.s.NettyServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
 
+(Server started, use Ctrl+D to stop and go back to the console...)
 
-[chrome-websocket]: https://chrome.google.com/webstore/detail/simple-websocket-client/pfdhoblngboilpfeibdedpjgfnlcodoo?hl=en
+On your browser visit the url:
+localhost:9000/connect
