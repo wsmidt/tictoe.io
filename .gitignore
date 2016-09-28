@@ -3,3 +3,5 @@ project/project/
 project/target/
 logs/
 .idea/
+.classpath
+.project
